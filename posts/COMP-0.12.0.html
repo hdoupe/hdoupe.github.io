@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>hankdoupe</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+      .bg-dodger {
+        background-color:dodgerblue;
+      }
+      body {
+        font-family: 'Roboto', sans-serif;
+        font-size: 17px;
+      }
+      a {
+        color: dodgerblue;
+      }
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+
+    </style>
+  
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top"> 
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">hankdoupe</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="../index.html">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+<head>
+<body>
+<div class="container mt-2" style="max-width: 800px">
+<h1 id="comp-0.12.0" class="mt-5">COMP 0.12.0</h1>
+<hr class="my-4">
+<p><a href="https://github.com/comp-org/comp-ce/releases/tag/0.12.0">Release 0.12.0</a> brings a re-write of the inputs page and significant improvements in the compute architecture. The re-write scrapped the inputs form created from a combination of Python, HTML, Django templating, and JQuery in favor of a JavaScript based frontend written with the ReactJS UI framework. Writing the form completely in JavaScript put all of the form creation, validation, and submission logic in one place, saving time spent hunting down UI bugs in different corners of the code base. A JavaScript based frontend made it easy to perform basic range and type validation on the fly, giving users instantaneous feedback when they enter an invalid value. Most importantly, it makes it easy to perform asynchronous form submission.</p>
+<p>The compute architecture needed to be updated to handle asynchronous inputs validation. Previously, the user submitted data for validation to the COMP web server, it did some initial form validation, and then the data was sent through the model’s custom validation code in the compute cluster. All of this occurred during a single, blocking request while the user waited on the results from validation. If the number of inputs to be validated was large or if there was any extra delay at all, it was likely that the request would time out and the application would crash.</p>
+<p>COMP 0.12.0 made the validation step asynchronous. Now, the inputs are submitted for validation to the compute cluster, the job is kicked off to a Celery worker, and the task ID is returned to the web server. While the validation task is running, the client, either the React frontend or a REST API user, polls the inputs at until validation is complete. The compute cluster pushes the validation results back to the web server where the inputs object is updated and a new simulation is started in the compute cluster. The React client then redirects to the outputs page and waits on the simulation to complete.</p>
+<p>After a day of running in production, COMP 0.12.0 has held up very well. The page load times are down, and there have not been any errors from request timeouts. That is not to say that there have been no errors at all. There have been some issues with connectivity to the worker cluster, but that is a separate issue. Not only did COMP 0.12.0 resolve a major error that affected many users on COMPmodels.org, the introduction of React on the inputs page opens up a path for real innovation in the COMP’s UI.</p>
+</div>
+</body>
+</html>
