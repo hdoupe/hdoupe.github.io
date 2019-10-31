@@ -1,41 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
     <title>hankdoupe</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css">
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
 
     <style>
       .bg-dodger {
-        background-color:dodgerblue;
+        background-color: dodgerblue;
       }
       body {
-        font-family: 'Roboto', sans-serif;
+        font-family: "Roboto", sans-serif;
         font-size: 17px;
       }
       a {
         color: dodgerblue;
       }
       /* code{white-space: pre-wrap;} */
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
+      span.smallcaps {
+        font-variant: small-caps;
+      }
+      span.underline {
+        text-decoration: underline;
+      }
+      div.column {
+        display: inline-block;
+        vertical-align: top;
+        width: 50%;
+      }
       code {
         color: inherit;
-        background-color: rgba(27,31,35,0.05);
+        background-color: rgba(27, 31, 35, 0.05);
         border-radius: 5px;
-        padding: .2rem;
+        padding: 0.2rem;
       }
       pre code {
         padding: 1rem;
@@ -46,22 +65,29 @@
         margin-bottom: 1rem;
       }
     </style>
-  
   </head>
 
   <body>
-
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top"> 
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
       <div class="container">
         <a class="navbar-brand" href="../index.html">hankdoupe</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="../index.html">Home
+              <a class="nav-link" href="../index.html"
+                >Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
@@ -75,20 +101,42 @@
 
     <div class="container mt-2" style="max-width: 800px">
       <h1 id="paramtools-0100" class="mt-5">ParamTools 0.10.0</h1>
-      <hr class="my-4">
+      <hr class="my-4" />
       <p><strong>Highlights:</strong></p>
       <ul>
-      <li>
-      Better data access and CSV/spreadsheet compatitbility
-      </li>
-      <li>
-       Performance improvements
-      </li>
-      <li>Specify ParamTools operators like <code>label_to_extend</code> in the <code>defaults</code> object</li>
-      <li>Bug fix for handling array parameters</li>
+        <li>
+          Better data access and CSV/spreadsheet compatitbility
+        </li>
+        <li>
+          Performance improvements
+        </li>
+        <li>
+          Specify ParamTools operators like <code>label_to_extend</code> in the
+          <code>defaults</code> object
+        </li>
+        <li>Bug fix for handling array parameters</li>
       </ul>
       <h3>Better data access and CSV/spreadsheet compatibility</h3>
-      <p>Many projects and their users are more familiar with spreadsheets than JSON files. Although ParamTools does not have built-in support for spreadsheets, it tries to make it easy for projects to write custom <code>adjust</code> methods for this type of use case. The example in the <a href="https://paramtools.org/api/custom-adjust/">custom adjustment docs</a> shows how to utilize this flexibility to read in CSV files and convert them into ParamTools adjustments. <a href="https://github.com/PSLmodels/Tax-Cruncher">Tax-Cruncher</a>, an open-source tax-policy model, uses this approach so that its users can adjust the default parameters with CSV files. This real-world example showed that ParamTools needed to make it easier for projects to loop over their parameters and their values. This release adds a few methods like <code>.items()</code> and <code>.keys()</code> that make <code>Parameters</code> objects feel more like Python dictionaries, yielding a familiar, intuitive interface:</p>
+      <p>
+        Many projects and their users are more familiar with spreadsheets than
+        JSON files. Although ParamTools does not have built-in support for
+        spreadsheets, it tries to make it easy for projects to write custom
+        <code>adjust</code> methods for this type of use case. The example in
+        the
+        <a href="https://paramtools.org/api/custom-adjust/"
+          >custom adjustment docs</a
+        >
+        shows how to utilize this flexibility to read in CSV files and convert
+        them into ParamTools adjustments.
+        <a href="https://github.com/PSLmodels/Tax-Cruncher">Tax-Cruncher</a>, an
+        open-source tax-policy model, uses this approach so that its users can
+        adjust the default parameters with CSV files. This real-world example
+        showed that ParamTools needed to make it easier for projects to loop
+        over their parameters and their values. This release adds a few methods
+        like <code>.items()</code> and <code>.keys()</code> that make
+        <code>Parameters</code> objects feel more like Python dictionaries,
+        yielding a familiar, intuitive interface:
+      </p>
       <pre><code class="python">for param in params:
   print(param)
 
@@ -112,8 +160,12 @@ params.to_dict()
 #     &quot;two_param&quot;: [{&quot;value&quot;: &quot;world&quot;}]
 # }
       </code></pre>
-      
-      <p>An unexpected advantage of adding these methods is that a pandas <code>DataFrame</code> can be created directly from a <code>Parameters</code> instance:</p>
+
+      <p>
+        An unexpected advantage of adding these methods is that a pandas
+        <code>DataFrame</code> can be created directly from a
+        <code>Parameters</code> instance:
+      </p>
       <pre><code class="python">import pandas as pd
 import paramtools
 
@@ -159,9 +211,14 @@ print(params_df)
 # 4  5  10
 
       </code></pre>
-      
+
       <h3>Performance Improvements</h3>
-      <p>ParamTools 0.10.0 brings significant performance improvements for parameter lookups and updates. Prior to this release, ParamTools used a simple but naive approach for searching over lists of value objects. For updates, the logic looked like this:</p>
+      <p>
+        ParamTools 0.10.0 brings significant performance improvements for
+        parameter lookups and updates. Prior to this release, ParamTools used a
+        simple but naive approach for searching over lists of value objects. For
+        updates, the logic looked like this:
+      </p>
       <pre><code class="python"># loop over all new values
 for i in range(len(new_values)):
     curr_vals = self._data[param][&quot;value&quot;]
@@ -183,10 +240,42 @@ for i in range(len(new_values)):
     if not matched_at_least_once:
         curr_vals.append(new_values[i])
       </code></pre>
-      
-      <p>The search function used a similar algorithm.  The new approach sorts the incoming value objects and the existing value objects by their labels and their labels' values. It then does a single loop over the labels and keeps track of the matches between the incoming value objects and the existing value objects. Not only is there less algorithmic complexity, but much of the computational work utilizes Python's <code>set</code> data structure and its fast union and intersection operations. The result is a speed up of 5-14x for updates and 2-4x on searches, depending on how many value objects need to be searched or updated. I detailed the profiling approach and results in PR <a href="https://github.com/PSLmodels/ParamTools/pull/74">#74</a>, and I plan to do a more in depth write-up in a follow-up post. Until then, the <a href="https://github.com/PSLmodels/ParamTools/blob/master/paramtools/tree.py"><code>tree.py</code></a> module (and its extensive doc strings and comments) is the best source of documentation for the new implementation.</p>
-      <h3>Specify ParamTools operators like <code>label_to_extend</code> in the <code>defaults</code> object</h3>
-      <p>The "schema" object in the <code>defaults.json</code> file now includes an "operators" object for specifying the value for attributes like <code>label_to_extend</code> or <code>array_first</code>. The new <code>dump</code> method is helpful for converting a <code>Parameters</code> instance's data to a JSON sting. This makes it easier for a webapp like <a href="https://compute.studio">Compute Studio</a> to consume a project's ParamTools configuration even if the project itself is not installed on the webserver.</p>
+
+      <p>
+        The search function used a similar algorithm. The new approach sorts the
+        incoming value objects and the existing value objects by their labels
+        and their labels' values. It then does a single loop over the labels and
+        keeps track of the matches between the incoming value objects and the
+        existing value objects. Not only is there less algorithmic complexity,
+        but much of the computational work utilizes Python's
+        <code>set</code> data structure and its fast union and intersection
+        operations. The result is a speed up of 5-14x for updates and 2-4x on
+        searches, depending on how many value objects need to be searched or
+        updated. I detailed the profiling approach and results in PR
+        <a href="https://github.com/PSLmodels/ParamTools/pull/74">#74</a>, and I
+        plan to do a more in depth write-up in a follow-up post. Until then, the
+        <a
+          href="https://github.com/PSLmodels/ParamTools/blob/master/paramtools/tree.py"
+          ><code>tree.py</code></a
+        >
+        module (and its extensive doc strings and comments) is the best source
+        of documentation for the new implementation.
+      </p>
+      <h3>
+        Specify ParamTools operators like <code>label_to_extend</code> in the
+        <code>defaults</code> object
+      </h3>
+      <p>
+        The "schema" object in the <code>defaults.json</code> file now includes
+        an "operators" object for specifying the value for attributes like
+        <code>label_to_extend</code> or <code>array_first</code>. The new
+        <code>dump</code> method is helpful for converting a
+        <code>Parameters</code> instance's data to a JSON sting. This makes it
+        easier for a webapp like
+        <a href="https://compute.studio">Compute Studio</a> to consume a
+        project's ParamTools configuration even if the project itself is not
+        installed on the webserver.
+      </p>
       <pre><code class="JSON">defaults = {
     &quot;schema&quot;: {
         &quot;operators&quot;: {
@@ -202,19 +291,27 @@ for i in range(len(new_values)):
     },
 }
       </code></pre>
-      
+
       <h3>Bug fixes</h3>
       <ul>
-      <li>This release fixes a bug where array parameters were not handled correctly when <code>array_first</code> is <code>True</code>. (<a href="https://github.com/PSLmodels/ParamTools/pull/76">PR #76</a>)</li>
+        <li>
+          This release fixes a bug where array parameters were not handled
+          correctly when <code>array_first</code> is <code>True</code>. (<a
+            href="https://github.com/PSLmodels/ParamTools/pull/76"
+            >PR #76</a
+          >)
+        </li>
       </ul>
-
     </div>
-    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
   </body>
-
 </html>
-
