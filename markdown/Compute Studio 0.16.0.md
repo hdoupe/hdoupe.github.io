@@ -5,11 +5,11 @@
 - Models can use dask clusters for parallel computations.
 - Streamlined deployment process with C/S Cluster
 
-Compute Studio [0.16.0][1] adds beta support for models that use [Dask][2] to parallelize their workloads across multiple cores, threads, or even servers. In preparation for this, the C/S deployment process was streamlined from multiple scripts and Docker commands to a single Python class that provides a user-friendly and extendable API. While Dask is useful even on a single laptop, projects like [Distributed][3] and [Dask-Kubernetes][4] have made it easy to take advantage of the practically infinite amount of computing available in the cloud. This ecosystem and the streamlined deployment process make it possible for C/S modelers to publish faster, more scalable models with Dask.
+Compute Studio [0.16.0][1] adds beta support for models that use [Dask][2] to parallelize their workloads across multiple cores, threads, or even servers. It also includes a new module, C/S Cluster, for automating the deployment of Compute Studio's compute cluster. While Dask is useful even on a single laptop, projects like [Distributed][3] and [Dask-Kubernetes][4] have made it easy to take advantage of the practically infinite amount of computing available in the cloud. In preparation for adding Dask support, C/S cluster was created to streamline the deployment process with an easy-to-use Python API.  This ecosystem and C/S Cluster make it possible for C/S modelers to publish faster, more scalable models with Dask.
 
-### Dask Clusters
+### Adding Dask clusters to Compute Studio's compute cluster
 
-Over the past few weeks, I worked with Jason DeBacker and Rick Evans who are core-maintainers of [OG-USA][5], a dynamic model of the economy of the United States, to get OG-USA ready to be published on C/S and to get C/S ready for OG-USA. Using dask with the C/S compute cluster has been on our list of priorities for some time, but OG-USA's use of Dask pushed it to the top of our priority list. 
+Over the past few weeks, I worked with Jason DeBacker and Rick Evans who are core-maintainers of [OG-USA][5], a dynamic model of the economy of the United States, to get OG-USA ready to be published on C/S and to get C/S ready for OG-USA. Using Dask with the C/S compute cluster has been on our list of priorities for some time, but OG-USA's use of Dask pushed it to the top of the list. 
 
 Before we get into Dask and Compute studio, let's cover how the Compute Studio system works. Simulations originate when you punch in some inputs and click run. Those inputs are submitted to the primary webserver, and if they are valid, they are submitted to the compute cluster. A lightweight gateway webserver is used by the primary webserver to communicate with the compute cluster. So, when the simulation is submitted to the compute cluster, the lightweight webserver receives the simulation inputs and sends them to a scheduler. This scheduler routes the simulation inputs to the correct worker and the worker pushes the results back to the primary webserver. Here's a simple version of this with one model:
 
@@ -19,7 +19,7 @@ Before we get into Dask and Compute studio, let's cover how the Compute Studio s
 graph LR
 A(User) --> B(Primary Webserver);
 B(Primary Webserver) --> A(User);
-B(Primary Webserver) --> C(Flask App);
+B(Primary Webserver) --> C(Gateway Webserver);
 C(Gateway Webserver) --> D(Scheduler);
 D(Scheduler) --> F(Tax-Brain Worker);
 F(Tax-Brain Worker) --> |Push Results| B(Primary Webserver)
