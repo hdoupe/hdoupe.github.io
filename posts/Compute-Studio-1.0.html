@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>hankdoupe</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true });</script>
+  <style>
+    .bg-dodger {
+      background-color: dodgerblue;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      font-size: 17px;
+    }
+
+    a {
+      color: dodgerblue;
+    }
+
+    /* code{white-space: pre-wrap;} */
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+
+    div.column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    code {
+      color: inherit;
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 5px;
+      padding: 0.2rem;
+    }
+
+    pre code {
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h3 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">hankdoupe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="../index.html">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-2" style="max-width: 800px">
+
+    <h1 class="mt-5">Compute Studio 1.0</h1>
+    <hr class="my-4" />
+
+    <p>Highlights:</p>
+    <ul>
+      <li>Simulations are documents that can be titled and annotated.</li>
+      <li>Slimmed down outputs page.</li>
+      <li>Streamlined authentication process.</li>
+    </ul>
+    <h2>Features overview:</h2>
+    <p>Compute Studio 1.0 transforms simulations into documents that you can title, annotate, and share. Simulation
+      creators now have the ability to provide the necessary context to their simulations that is needed to make
+      them shareable products. Like documents, simulation configurations can change over time and be modified by
+      multiple authors, and the new history feature will make it easy to look back and see what has changed and
+      who made those changes. Finally, simulations can be made public or private, giving their creators the power
+      to choose when they are ready to share their simulation with the public. During this process, we streamlined
+      the sign in and sign up flow by further integrating it into the simulation page, and we slimmed down our
+      outputs page. Those of us working on the Compute Studio project are beyond excited to add these features and
+      to continue to build on top of them. </p>
+    <p>If you have any questions or feedback about this release or C/S in general, please don't hesitate to send me
+      an <a href="mailto:hank@compute.studio">email</a> or <a
+        href="https://github.com/compute-tooling/compute-studio/issues/new">open an issue</a> in the C/S code
+      repository.</p>
+    <p>Thanks to Matt Jensen for designing the new simulation page. Also, thanks to Peter Metz for giving feedback
+      on this set of features at every step along the way, including the morning after they were shipped. Finally,
+      thanks to the C/S publishers for updating their models to the new outputs API.</p>
+    <p class="d-flex justify-content-center m-5">
+      <img src="https://user-images.githubusercontent.com/9206065/72651329-078c7080-3951-11ea-967f-0f3baef5c4d3.png">
+    </p>
+    <h2>Engineering process:</h2>
+    <p>In order to build the simulation document, we needed to transform our server-rendered frontend into a cutting
+      edge client-side application that could quickly respond to users and manage user and simulation state. The
+      first problem was that the C/S inputs and outputs pages are really heavy, with the Tax-Brain inputs page
+      rendering over 400 input fields and the outputs page rendering dozens of detailed HTML tables and several
+      interactive plots. Last July, I re-wrote the inputs form in JavaScript, using the <a
+        href="https://reactjs.org/">React UI</a> framework and the <a href="https://jaredpalmer.com/formik/">Formik</a>
+      form library. This resulted in an inputs page that
+      loaded quickly, responded immediately to input, and easily handled asynchronous validation with the models
+      in the compute cluster. This new inputs page went live in <a
+        href="https://hankdoupe.com/posts/COMP-0.12.0.html">C/S 0.12.0</a>.</p>
+    <p>Next up, we combined the outputs and inputs pages, and in the process, we made the outputs render just as
+      quickly as the inputs page by pre-rendering the results, taking screen-shots of them, and rendering those
+      screen-shots instantly while the outputs loaded asynchronously. The results are rendered in a headless
+      chromium browser using <a href="https://github.com/miyakogi/pyppeteer">Pyppeteer</a>, a Python port of <a
+        href="https://github.com/puppeteer/puppeteer">Puppeteer</a>, to render each result and take a screen
+      shot of the HTML node that the result is encompassed in. This approach was simple and worked surprisingly
+      well, delivering tight screen-shots without much unused white space surrounding them. The hardest part of
+      this step was that all of the existing interactive Bokeh plots on Compute Studio were in the wrong format.
+      We'd stored them in an HTML format that was incompatible with the JSON format required by Bokeh's JavaScript
+      API. However, <a href="https://discourse.bokeh.org/t/migrating-from-components-to-json-items/4104/4">thanks
+        in large part to Bryan on the Bokeh team</a>, I developed a series of regular expressions to convert our
+      existing HTML data into the JSON format that we needed, and it <em>somehow</em> worked flawlessly:</p>
+    <pre><code class="language-python" lang="python">
+# don't try this at home
+exp = r'{"roots":.+"version":"[0-9].[0-9].[0-9]"}'
+res = re.search(exp, output["data"]["javascript"])
+unescaped = (
+    res.group(0)
+    .replace("&gt;", "&gt;")
+    .replace("&lt;", "&lt;")
+    .replace("&amp;gt;", "&gt;")
+    .replace("&amp;lt;", "&lt;")
+    .replace("\\n", "\n")
+    .replace('\\"', '\"')
+)
+parsed = json.loads(unescaped)
+root_id = parsed["roots"]["root_ids"][0]
+output["data"] = {"target_id": None, "root_id": root_id, "doc": parsed}
+    </code></pre>
+    <p>The final step was to turn our <em>single page simulation</em> into a <em>simulation document</em> by adding
+      a title and an editor to write the description. We chose the <a href="https://docs.slatejs.org/">Slate
+        editor framework</a> so that we could have the ability to customize our editor to our needs such as
+      potentially linking the editor to comments on parameter sections. I adapted the <a
+        href="https://www.slatejs.org/examples/richtext">Rich Text</a> and <a
+        href="https://www.slatejs.org/examples/links">Link</a> examples in their documentation to our needs, and
+      now we have an easy-to-use editor. I initially looked into using a Markdown editor with a preview button but
+      this wasn't a good fit for our use case since our users aren't likely to be familiar with Markdown and would
+      be more familiar with a WYSIWYG experience from their editor.</p>
+    <p>This release streamlines Compute Studio's authentication so that users can sign up at any point in the
+      process of viewing or creating a simulation without losing any of their data on the page. <a
+        href="https://hankdoupe.com/posts/Compute-Studio-0.13.0-0.14.0.html">C/S 0.14.0</a> added a
+      sign-in/sign-up window to the run simulation dialog; however, we needed a solution for users who would want
+      to write a title or some notes for their simulation before they clicked "Run". The solution was to use <a
+        href="https://reactjs.org/docs/portals.html">React Portal</a> to hook onto the existing "Sign in" /
+      "Sign up" buttons and replace them with their React twins allowing the user to sign in or sign up through a
+      dialog window. On completion, the application state is updated and either a new simulation object is created
+      for them in the C/S database or they get write access to the simulation they are viewing if they are owners
+      of it or the ability to "fork" it if they are not.</p>
+    <p>Compute Studio 1.0 is such a massive release that all of the new features can't be covered in a single blog
+      post. I could go on for thousands and thousands of words about converting Compute Studio to TypeScript, a
+      statically typed superset of JavaScript, which has vastly improved the frontend developer experience for
+      Compute Studio and made it easy and fast to refactor the code for this release several times.</p>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
