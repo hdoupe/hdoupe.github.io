@@ -7,7 +7,7 @@ Highlights:
 - Share your public simulations for free with other users on Compute Studio.
 - [Upgrade](https://compute.studio/billing/upgrade/) to share your private simulations on Compute Studio and support Compute Studio’s development.
 
-## Features Overview
+## Features Overview:
 
 Compute Studio 1.3.0 adds new collaboration features for our Compute Studio  users! Now you can easily share your public and private simulations with other users on Compute Studio, and you can now recognize collaborators  as coauthors. While there are no limits to collaboration on *public* simulations, you will need to upgrade to Compute Studio Plus or Pro to have access to these collaboration features on *private* simulations. Upgrading is a great way to share your work privately with colleagues or clients.
 
