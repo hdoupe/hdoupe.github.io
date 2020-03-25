@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>hankdoupe</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true });</script>
+  <style>
+    .bg-dodger {
+      background-color: dodgerblue;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      font-size: 17px;
+    }
+
+    a {
+      color: dodgerblue;
+    }
+
+    /* code{white-space: pre-wrap;} */
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+
+    div.column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    code {
+      color: inherit;
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 5px;
+      padding: 0.2rem;
+    }
+
+    pre code {
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h3 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">hankdoupe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="../index.html">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-2" style="max-width: 800px">
+
+    <h1 class="mt-5">Compute Studio 1.3.0</h1>
+    <hr class="my-4" />
+    <p>Highlights:</p>
+    <ul>
+      <li>Add coathors to your simulation.</li>
+      <li>Share your public simulations for free with other users on Compute Studio.</li>
+      <li><a href="https://compute.studio/billing/upgrade/">Upgrade</a> to share your private simulations on
+        Compute Studio and support Compute Studio’s development.</li>
+    </ul>
+    <h2>Features Overview</h2>
+    <p>Compute Studio 1.3.0 adds new collaboration features for our Compute Studio users! Now you can easily share
+      your public and private simulations with other users on Compute Studio, and you can now recognize
+      collaborators as coauthors. While there are no limits to collaboration on <em>public</em> simulations, you
+      will need to upgrade to Compute Studio Plus or Pro to have access to these collaboration features on
+      <em>private</em> simulations. Upgrading is a great way to share your work privately with colleagues or
+      clients.</p>
+    <p>This is just the start of the collaboration suite that we are building for Compute Studio. Please let us know
+      how these features suit your work, and what else would help your collaboration with colleagues, clients,
+      friends, and followers. This is an exciting release for the team, and finally offers the collaboration
+      features that we’ve been planning for months. I’m very eager to hear your feedback.</p>
+    <p>Finally, if you’re a C/S user, I’d like to encourage you to check out <a
+        href="https://compute.studio/billing/upgrade/">our new subscriptions</a>. Buying a subscription unlocks
+      private collaboration for you <em>and</em> funds Compute Studio’s developers (like me) and the servers on
+      which it runs.</p>
+    <p class="d-flex justify-content-center m-5">
+      <img alt="img"
+        src="https://user-images.githubusercontent.com/9206065/77544377-4f62d300-6e7f-11ea-8c18-8fbe93db3e24.gif" />
+    </p>
+    <h2>Engineering Process:</h2>
+    <p>Thanks to the excellent tooling in the open-source ecosystem and <a href="https://stripe.com">Stripe’s
+        easy-to-use API</a>, the biggest challenge of creating collaboration features and multi-tier
+      subscriptions was getting the design right. Like many other design decisions that we’ve had to make for
+      Compute Studio, we looked to GitHub to see how they designed access levels for GitHub repositories.
+      Essentially, GitHub lets you assign roles like “Read”, “Write”, and “Admin” for your repositories. The rules
+      are:</p>
+    <ul>
+      <li>Users can only have one of these roles at a time.</li>
+      <li>Each role is granted a set of permissions.</li>
+      <li>Each role up the hierarchy inherits permissions from roles that are lower in the hierarchy.</li>
+    </ul>
+    <p>If this was good enough for GitHub, then we decided it was good enough for us. Thanks to <a
+        href="https://github.com/django-guardian/django-guardian"><code>django-guardian</code></a> the
+      implementation process was easy once we decided on this role-based framework. <code>django-guardian</code>
+      provides object-based (row-level) permissions for Django database models. Now, the owner of each simulation
+      is assigned the <code>admin</code> role. The <code>admin</code> role allows you to edit the title,
+      description, or inputs and assign roles to other users. For example, a simulation owner can assign the
+      <code>read</code> role to another user on a private simulation, making it easy for to get feedback before
+      sharing the simulation more broadly. A simulation <code>admin</code> can also invite coauthors to their
+      simulation. Note that coauthors are automatically granted the <code>read</code> role.</p>
+    <p>During the development of these features a simple recipe emerged for adding role-based access to different
+      aspects of a simulation:</p>
+    <ol>
+      <li>Isolate an action that can be taken on a simulation, such as being able to view it, and assign a
+        permission for this action to a role. For example, assign “viewing a simulation” to the
+        <code>read</code> role.</li>
+      <li>Before letting a user perform this action, check if their role permits it. Do they at least have the
+        <code>read</code> role? If not, throw an error.</li>
+      <li>Write a test that ensures that users who are supposed to have the permission have it and can perform the
+        action like being able to view a simulation.</li>
+      <li>Write another test that ensures that users who are <strong>not</strong> supposed to have the permission
+        don’t have it and cannot perform the action.</li>
+    </ol>
+    <p>While Compute Studio is an open-source project and offers its core services for free, we have also adopted a
+      market-based approach to sustaining and advancing our work. Like many other services such as GitHub, our new
+      paid subscription plans on Compute Studio give you access to different levels of private collaboration. Our
+      first offering provides four plans: C/S Free, C/S Plus, C/S Pro, and a forthcoming C/S Teams. C/S Free lets
+      you do everything that you’ve always been able to do like run simulations, make them private or public, and
+      now, add an unlimited number of collaborators on <em>public</em> simulations. However, by upgrading to C/S
+      Plus, you can add one additional collaborator on <em>private</em> simulations, and by upgrading to C/S Pro,
+      you can add an unlimited number of collaborators on <em>private</em> simulations. C/S Teams will make it
+      easier for organizations to administer teams on Compute Studio. If you want to support Compute Studio’s
+      development, <a href="https://compute.studio/billing/upgrade/">upgrading</a> to a paid plans, sending us
+      your feedback, or sharing Compute Studio with others are the absolute best ways to do it.</p>
+    <p>On the implementation side, every time a user tries to add a collaborator on a <em>private</em> simulation
+      the code checks if your plan allows you to add an additional collaborator. If the plan does not, then we
+      gently nudge you to upgrade your subscription.</p>
+    <p>For everyone who has made it this far, I’d love to hear your feedback. What do you think of Compute Studio’s
+      role-based permissions? Are you a C/S user or are you writing your own role-based permissions for another
+      project? Let me know what you think at hank@compute.studio.</p>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
