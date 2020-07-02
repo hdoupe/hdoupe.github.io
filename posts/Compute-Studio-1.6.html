@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>hankdoupe</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true });</script>
+  <style>
+    .bg-dodger {
+      background-color: dodgerblue;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      font-size: 17px;
+    }
+
+    a {
+      color: dodgerblue;
+    }
+
+    /* code{white-space: pre-wrap;} */
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+
+    div.column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    code {
+      color: inherit;
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 5px;
+      padding: 0.2rem;
+    }
+
+    pre code {
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h3 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">hankdoupe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="../index.html">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-2" style="max-width: 800px">
+    <h1 id="compute-studio-16" class="mt-5">Compute Studio 1.6</h1>
+    <hr class="my-4" />
+    <p><strong>Highlights:</strong></p>
+    <ul>
+      <li><em>Almost</em> automatic publishing and updates using GitHub Actions.</li>
+      <li>Increased computational performance and efficiency with Kubernetes Jobs.</li>
+    </ul>
+    <h2>Features Overview</h2>
+    <p><a href="https://compute.studio/">Compute Studio</a> 1.6 represents a huge step towards accomplishing two goals that Matt Jensen and I set for Compute
+      Studio at the beginning of the project. First, we want to make it easy to publish and update models on Compute
+      Studio. Second, we want to efficiently use compute resources while at the same time making sure that users get
+      their results as quickly as possible. This release reduces a significant amount of friction in the model
+      publishing process and opens a clear path for completely automating model publishing. Further, this release
+      drastically reduces C/S server costs while increasing the amount of compute available to the models. Throughout
+      the development of this release, we worked to shore up other parts of the C/S infrastructure. These improvements
+      include more secure secrets management, more isolated model environments, enhanced deployment tooling, and more.
+      The end result vastly improves the current performance of the C/S compute cluster and makes way for future
+      improvements. Thank you to everyone who contributed to this release! </p>
+    <p>Read on to learn more about what went into C/S 1.6. Or, if you just want to see the code without the long-winded
+      release notes, you can find it in the <a
+        href="https://github.com/compute-tooling/compute-studio/tree/master/workers"><code>workers</code></a> package
+      and the <a href="https://github.com/compute-tooling/compute-studio-publish/">compute-studio-publish</a> repo.</p>
+    <p><em>If you like what we are doing, check out the C/S <a href="https://compute.studio/billing/upgrade/">premium
+          plans</a>. This is how we fund our server costs and pay my salary as the primary technical developer.</em></p>
+    <h2>Engineering Process</h2>
+    <p>Before getting into the technical details of this release, I just want to say that this was a <em>really</em> fun
+      release. The problems that we tackled are challenging, and they forced the C/S team to think through and try
+      several different solutions before figuring out what worked. </p>
+    <div class="mermaid">
+      graph LR
+      B(Primary Webserver) --> C(Scheduler);
+      C(Scheduler) --> B(Primary Webserver);
+      C(Scheduler) --> D(Tax-Brain Inputs Server);
+      D(Tax-Brain Inputs Server) --> |Sync Inputs Task Result| C(Scheduler);
+      D(Tax-Brain Inputs Server) --> |Async Inputs Task Result| G(Outputs-Processor);
+      C(Scheduler) -.-> F(Tax-Brain Job i);
+      F(Tax-Brain Job i) --> |Store outputs in Cloud and Webapp| G(Outputs Processor)
+      G(Outputs Processor) --> B(Primary Webserver)
+      G(Outputs Processor) --> H(Cloud Storage)
+      H(Cloud Storage) --> B(Primary Webserver)
+    </div>
+    <h3>Automatic Publishing with GitHub and GitHub Actions</h3>
+    <p>The crucial insight for automating the publish and update process was that this is really a CI/CD problem. This
+      insight made it clear that we shouldn't build our own tech from scratch, and that we should use GitHub (or another
+      git service like GitLab) as the interface to our CI/CD service. There are several reasons for this:</p>
+    <ol>
+      <li>GitHub already supports many types of CI/CD services which allows us to try one service and swap to another if
+        we aren't happy with it.</li>
+      <li>Many developers are familiar with GitHub, making it easy to discuss any build or test errors. Further, any
+        PR's or issues that are created in relation to a particular build all link to the PR with the build failure.
+      </li>
+      <li>GitHub provides a REST API that C/S can use to automate the publish and update process.</li>
+    </ol>
+    <p>I chose <a href="https://github.com/features/actions">GitHub Actions</a> because it didn't require me to set up
+      other services outside of GitHub. It has predefined flows for doing things like building and publishing Docker
+      images and deploying to a Kubernetes cluster. This made it easy to cobble together several existing configuration
+      files to accomplish the flow that we needed. I also explored Microsoft's Azure Pipelines. Pipelines offers an
+      easy, seamless integration with GitHub; however, it didn't add any additional features relevant to our flow that
+      warranted adding another service to C/S's already complicated technology stack. As an aside, I was disappointed
+      that none of the CI/CD services except for AWS's offering have a <em>hosted</em> service with configurable compute
+      resources like number of CPUs and amount of RAM. I would happily pay for this feature if it was available.</p>
+    <p>Next, I began setting up a git-based flow for publishing and updating models. I created the <a
+        href="https://github.com/compute-tooling/compute-studio-publish"><code>compute-studio-publish</code></a>
+      repository to serve as the home of the CI/CD service. This separates C/S development from the chatter of model
+      updates. The <code>compute-studio-publish</code> repo has a configuration file for each public model on C/S
+      located at <code>config/:owner/:title.yaml</code>. An update is triggered when a PR is opened with the model's
+      modified file. Currently, I manually start the update process when I get an automated email notification after a model
+      update on C/S or if a model maintainer asks for an update. In the future, this step will be triggered by a model maintainer from the C/S
+      GUI or REST API. </p>
+    <p>The update and deploy sequence looks like this:</p>
+    <ol>
+      <li>
+        <p>Update the timestamp in the configuration file, and open a PR with the modified file.</p>
+      </li>
+      <li>
+        <p>The PR kicks off a build, test, and push sequence. </p>
+      </li>
+      <li>
+        <p>The build step creates a docker image with all of the model's dependencies. </p>
+      </li>
+      <li>
+        <p>The test step runs the compute-studio tests for this model.</p>
+      </li>
+      <li>
+        <p>If the tests pass, then the docker image is pushed to the C/S docker image repository and the model's staging
+          tag is updated. If the tests fail, then the build fails. Once the model maintainer fixes the errors, the PR is
+          updated and the build and test process is started again.</p>
+      </li>
+      <li>
+        <p>The PR is merged by a C/S maintainer, and the webapp and compute cluster are updated with the latest version
+          of the model.</p>
+      </li>
+    </ol>
+    <p class="d-flex justify-content-center m-5"><img alt=""
+        src="https://user-images.githubusercontent.com/9206065/84497012-ff282f80-ac7b-11ea-81ac-0f80423019da.png" /></p>
+    <h3>Zero-to-N Scaling with Kubernetes Jobs</h3>
+    <p>Making progress on C/S's goal of automatically publishing models came easily once I realized that this was
+      actually a well-known and very solved problem. After that, the implementation was a matter of tying together
+      various existing services and automating the build/test/deploy steps. Making progress on C/S's scalability problem
+      did not come this easily--it was a year long grind. In the early days of C/S, the models were run on a single
+      Digital Ocean server using docker-compose. Jobs were submitted to the cluster through a Flask API, and the jobs
+      were run by Celery workers. Eventually, I moved the configuration from docker-compose to docker swarm and finally
+      to Kubernetes on Google Cloud Platform (GCP). The move to Kubernetes and GCP made it easier to set up autoscaling
+      rules based on CPU usage for each model's celery workers. This improved C/S's scalability, but it made the compute
+      costs way too high. The reason for the high costs was that each model had to have at least one celery worker
+      running at all times, resulting in a lot of idle servers.</p>
+    <p>The <a href="https://hankdoupe.com/posts/Compute-Studio-0.16.0.html">first attempt</a> at fixing this problem was
+      to use <a href="">Dask</a> and its <a href="https://kubernetes.dask.org/en/latest/">Kubernetes support</a> to
+      scale compute. We added Dask cluster support as a beta-level feature, but soon discovered that submitting more
+      than two or three simulations at once caused a scheduling traffic jam. Each simulation had several long-running
+      tasks, and each of these tasks held onto one of a Dask worker's threads. Eventually, there wasn't anywhere to
+      schedule sub-tasks and all of the simulations would stall until more workers could be added to the cluster. Next,
+      Matt Jensen and I spent some time exploring projects that were more in the ETL space like <a
+        href="https://airflow.apache.org/">Apache Airflow</a> and <a href="https://docs.prefect.io/">Prefect</a>. Apache
+      Airflow seemed like a great solution, and in particular, its <a
+        href="https://airflow.apache.org/docs/stable/executor/kubernetes.html">Kubernetes support</a> looked like it
+      would offer exactly what we needed. However, Airflow seemed to be geared more towards data-science jobs that are
+      scheduled to run on a regular basis and not jobs that need to be run on-demand. Prefect seemed like an evolution
+      from our initial approach of using Dask to schedule jobs, but it felt a little too new for us to base our
+      long-term infrastructure on. Finally, I decided to give <a
+        href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/">Kuberenetes Jobs</a> a
+      try. Throughout this process, I kept coming back to the Jobs documentation page and wondering if this is what we
+      needed. So, one day I fired up a Kubernetes Job using <a
+        href="https://compute.studio/PSLmodels/Tax-Cruncher/">Tax-Cruncher</a>, and the Job quickly came on-line and ran
+      successfully.</p>
+    <p>After this mini-experiment, I wrote a Python <code>Job</code> class to wrap interactions with Kuberenetes
+      configuration and began integrating this into the compute cluster. The early version of this class required the
+      model's owner and title, which Docker image tag to use to run the job, and the simulation inputs:</p>
+    <pre><code class="python">from cs_publish.client.job import Job
+
+job = Job(
+    project=&quot;cs-workers-dev&quot;,
+    owner=&quot;PSLmodels&quot;,
+    title=&quot;Tax-Cruncher&quot;,
+    tag=&quot;test-job&quot;,
+    job_kwargs={
+        &quot;adjustment&quot;: {&quot;Policy&quot;: {}, &quot;Tax Information&quot;: {}},
+        &quot;meta_param_dict&quot;: {&quot;year&quot;: 2020},
+    },
+    quiet=False,
+)
+
+job.create()
+        </code></pre>
+
+    <p>Some advantages that we got for <strong>free</strong> just by swapping from Celery to Kubernetes Jobs are:</p>
+    <ul>
+      <li><strong>Non-default Tags:</strong> Specify the docker image tag that you want to use to run the job. This has
+        several cool implications. One day, users could select archived images to run their simulation or modelers could
+        publish experimental or non-default images that users can select for their simulations.</li>
+      <li><strong>Zero-to-N scaling:</strong> Models are only using compute resources when a simulation is running.
+        Compute Studio charges users based on the compute that they use, and this finally brings our compute costs
+        in-line with how much users are charged for compute.</li>
+      <li><strong>Within Node Parallelization:</strong> Celery <a
+          href="https://github.com/celery/celery/issues/1709">doesn't let you start multiple processes</a>. Kubernetes
+        pods let you run as many processes as you want subject to the pod's resource limits. This is very helpful for
+        models like OG-USA that use Dask to parallelize many of its subroutines. Just swapping to Kubernetes Jobs cut <a
+          href="https://compute.studio/PSLmodels/OG-USA/">OG-USA</a> job times from 6 hours to 3 hours.</li>
+    </ul>
+    <p>The one headache was that the pods created by Kuberenetes Jobs are not cleaned up automatically. There is an
+      alpha-level feature called <a
+        href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#ttl-mechanism-for-finished-jobs"><code>ttlSecondsAfterFinished</code></a>
+      but most cloud providers will not let you use alpha-level features in a managed Kubernetes cluster. To work around
+      this, I set up a Kubernetes CronJob to clean up any pods that completed successfully:</p>
+    <pre><code class="yaml">apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: job-cleanup
+spec:
+  schedule: &quot;*/30 * * * *&quot;
+  successfulJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: job-cleanup
+          containers:
+            - name: kubectl-container
+              image: bitnami/kubectl:latest
+              command: [&quot;sh&quot;, &quot;-c&quot;, &quot;kubectl delete jobs --field-selector status.successful=1&quot;]
+          restartPolicy: Never
+        </code></pre>
+
+    <p>The new approach of using Kubernetes Jobs has been in production for about two weeks now and has been running
+      smoothly. Our costs have been reduced by about 50%, and we can add as many models as we want without incurring any
+      additional financial costs. I'm excited to see how this solution performs as Compute Studio scales up with more
+      models and more users.</p>
+    <h3>Miscellaneous Fixes and Improvements</h3>
+    <p>Since this release turned into a full-scale re-write of the compute cluster, I tried to fix some of the problems
+      that were neglected in the first implementation: </p>
+    <ol>
+      <li><strong>A new CLI:</strong> I created a fancy CLI tool, <code>csw</code>, that has multiple sub and sub-sub
+        commands using <a href="https://docs.python.org/3/library/argparse.html"><code>argparse</code></a>, the CLI
+        module in Python's standard library. This vastly improved the ergonomics of working with the compute cluster.
+        Prior to <code>csw</code>, I used a half-baked CLI tool that was wrapped with <code>Makefile</code> commands to
+        update and deploy the C/S cluster. Now, I can update the C/S services with just a few commands--no
+        <code>Makefile</code> needed:</li>
+    <pre><code>$ export TAG=new-release
+$ csw svc build
+$ csw svc push
+$ csw svc config -o - | kubectl apply -f -
+        </code></pre>
+
+      <li><strong>Improved Secrets Management:</strong> C/S secrets are now stored in a secrets manager and the process
+        of accessing and updating them is automated. I wrote a <a href="https://github.com/compute-tooling/compute-studio/blob/master/workers/cs_workers/secrets.py"><code>Secrets</code></a> class that wraps the Google Secret
+        Manager Python API, and added a <code>secrets</code> subcommand to <code>csw</code> for managing cluster and
+        model-level secrets. Soon I'd like to add support for other secrets backends like <a
+          href="https://bitwarden.com">Bitwarden</a>:</li>
+    <pre><code># Cluster level secrets
+$ csw svc secrets set --secret-name mysecret --secret-value helloworld
+
+# Model level secrets
+$ csw models -n PSLmodels/Tax-Cruncher secrets set --secret-name super --secret-value secret
+$ csw models -n PSLmodels/Tax-Cruncher secrets get super
+secret
+$ csw models -n PSLmodels/Tax-Cruncher secrets list
+{
+  &quot;super&quot;: &quot;secret&quot;
+}
+$ csw models -n PSLmodels/Tax-Cruncher secrets delete super
+        </code></pre>
+
+      <li><strong>Simplified configuration:</strong> All model configuration is now in the main C/S database. Now, when
+        a model is updated on C/S, the code repository, repository tag, and resource requirements are all pulled from
+        the C/S Rest API endpoint <code>https://compute.studio/publish/api/</code>.</li>
+      <li><strong>Async webservers:</strong> Tornado webservers replaced the Flask and Celery workers. Once the
+        simulations were no longer using Celery, it seemed like too much overhead to justify for short-running jobs.
+        Further, many of the tasks done by the scheduler service are IO-bound making it an ideal place to use an
+        asynchronous approach. I anticipate having to implement some kind of queuing mechanism for some of the services
+        like the one for screenshotting outputs and uploading the outputs to cloud storage, but the initial
+        implementation is holding up quite well.</li>
+      <li><strong>Redis ACL Users:</strong> Now that Celery is no longer used, I have more control over our Redis
+        database and can be more careful about which services have access to which data and what they can do with it. I
+        used Redis's new <a href="https://redis.io/topics/acl">ACL features</a> that let you define which commands each
+        Redis user can use and which keys they can access. The scheduler can get and set keys that start with
+        <code>job</code> or <code>projects</code>. The models can only get keys that start with <code>job</code> like
+        <code>job-super-long-id</code>. Since each job is given an ID created as a <a
+          href="https://en.wikipedia.org/wiki/Universally_unique_identifier">Universally Unique Identifier</a>, the job
+        can effectively only access data that is specific to it. Once the job is complete, it sends the results to an
+        outputs processor service that uploads the results to cloud storage and to the C/S webapp.</li>
+    </ol>
+    <h2>Wrapping up</h2>
+    <p>As exciting as this release is for the C/S team, I'm more excited for the features that we will be able to add
+      next. I'm thinking about completely automated publishing and deploys, enabling model maintainers to manage their own
+      secrets from the GUI, enabling users to select which version of a model they want to use, adding different types
+      of model deployments like interactive servers made with Dash, and the list goes on.</p>
+    <p>If you think this is cool, check out the <a
+        href="https://github.com/compute-tooling/compute-studio/tree/master/workers"><code>workers</code></a> package
+      and let me know what you think. You can find me at hank@compute.studio or just open an issue in the <a
+        href="https://github.com/compute-studio/">compute-studio</a> repo.</p>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
