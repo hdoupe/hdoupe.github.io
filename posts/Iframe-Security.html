@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>hankdoupe</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <style>
+    .bg-dodger {
+      background-color: dodgerblue;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      font-size: 17px;
+    }
+
+    a {
+      color: dodgerblue;
+    }
+
+    /* code{white-space: pre-wrap;} */
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+
+    div.column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    code {
+      color: inherit;
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 5px;
+      padding: 0.2rem;
+    }
+
+    pre code {
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h3 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">hankdoupe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="../index.html">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-2" style="max-width: 800px">
+    <h1 id="securing-iframes" class="mt-5">Securing Iframes</h1>
+    <hr class="my-4" />
+    <p>In the next Compute Studio release, we are adding the capability to publish dynamic visualizations. These visualizations can be viewed on the
+        C/S website or be embeded on another website. However, someone has to pay for the compute that is used to run these visualizations if they are
+        not sponsored. So, the current thinking is that the site that is embedding the viz will also pay for the compute. However, we need to make sure
+        that other people aren't taking advantage of their iframe link and using it on <i>their</i> website.
+    </p>
+    <p>This is where the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors">Content-Security-Policy frame-ancestors directive</a> is useful.
+        This lets you specify which sites are allowed to embed the viz. It makes sure that the parent of the Iframe has a URL that matches the URL set in the response header.
+    </p>
+    <iframe src="https://dev.compute.studio/hdoupe/ccc-widget/embed/hdoupe/" style="position: relative; height: 100vh; width: 100%; border: 0;"></iframe>
+    <p>Hopefull this renders with the correctly once the CSP in place and does not render otherwise.</p>
+</body>
+
+</html>
