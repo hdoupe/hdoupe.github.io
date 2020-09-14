@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>hankdoupe</title>
+
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/github.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+    <script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+      .bg-dodger {
+        background-color: dodgerblue;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        font-size: 17px;
+      }
+
+      a {
+        color: dodgerblue;
+      }
+
+      /* code{white-space: pre-wrap;} */
+      span.smallcaps {
+        font-variant: small-caps;
+      }
+
+      span.underline {
+        text-decoration: underline;
+      }
+
+      div.column {
+        display: inline-block;
+        vertical-align: top;
+        width: 50%;
+      }
+
+      code {
+        color: inherit;
+        background-color: rgba(27, 31, 35, 0.05);
+        border-radius: 5px;
+        padding: 0.2rem;
+      }
+
+      pre code {
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      h3 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">hankdoupe</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="../index.html"
+                >Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-2" style="max-width: 1000px">
+      <h1
+        class="mt-5"
+        id="Hosting-DashPlotly-and-Bokeh-Apps-on-Compute-Studio"
+        data-id="Hosting-DashPlotly-and-Bokeh-Apps-on-Compute-Studio"
+      >
+        <span>Hosting Dash/Plotly and Bokeh Apps on Compute Studio</span>
+      </h1>
+      <hr class="my-4" />
+
+      <div
+        id="doc"
+        class="markdown-body container-fluid comment-enabled"
+        data-hard-breaks="true"
+      >
+        <p>
+          <span
+            >Over the past month, I’ve been working to add the capability for </span
+          ><a href="https://compute.studio" target="_blank" rel="noopener"
+            ><span>Compute Studio (C/S)</span></a
+          ><span> to host plots made with </span
+          ><a href="https://plotly.com/dash/" target="_blank" rel="noopener"
+            ><span>Dash/Plotly</span></a
+          ><span> and </span
+          ><a href="https://bokeh.org/" target="_blank" rel="noopener"
+            ><span>Bokeh</span></a
+          ><span>. This work also paves the way for supporting </span
+          ><a href="https://shiny.rstudio.com/" target="_blank" rel="noopener"
+            ><span>Shiny</span></a
+          ><span> and other plotting libraries.</span>
+          <span
+            >For quite some time, I've admired how easy and fast it is to create
+            valuable tools for exploring data using Bokeh or Dash. It makes me
+            incredibly excited that C/S can now host apps created with them.
+            This is also a way for C/S to meet develepers where they are by
+            supporting the tools that they already use every day. In turn, C/S
+            offers them the capability to share their work with colleagues,
+            friends, or the public at large.</span
+          >
+        </p>
+        <p>
+          <span
+            >As always, publishing apps on C/S is free, but either the app
+            developer, app sponsor, or app user must pay for the compute costs.
+            One of the requirements when building this out was to make sure that
+            the apps are only running when they are being used. This resulted in
+            a low-cost way for developers to deploy and share their Bokeh and
+            Dash/Plotly creations.
+          </span>
+        </p>
+        <p>
+          If you read this and are interested in publishing your own app on C/S,
+          head on over to the
+          <a href="https://compute.studio/publish/">Publish</a> page. Not sure
+          where to get started? Send me an email at hank@compute.studio and I'll
+          walk you through the publishing process.
+        </p>
+        <h3
+          id="Step-1-Run-a-Dash-app-in-Kubernetes"
+          data-id="Step-1-Run-a-Dash-app-in-Kubernetes"
+        >
+          <span>Step 1: Run a Dash app in Kubernetes</span>
+        </h3>
+        <p>
+          <span
+            >One of the things that I’ve learned in the short time that I’ve
+            been working with Kubernetes is that you should start simple and
+            check your progress often. So before I started trying to automate
+            anything with the Kubernetes Python API, I created a couple basic
+            YAML files describing the </span
+          ><code>Deployment</code><span>, </span><code>Service</code
+          ><span>, and </span><code>Ingress</code
+          ><span> objects needed to serve my example project.</span>
+        </p>
+        <p>
+          <span
+            >Once I got this to work, I knew that I was going in the right
+            direction and could more confidently write the Python code required
+            to automatically create the necessary Kubernetes objects.</span
+          >
+        </p>
+        <h3
+          id="Step-2-Automate-publishing-a-Dash-app-in-Kubernetes"
+          data-id="Step-2-Automate-publishing-a-Dash-app-in-Kubernetes"
+        >
+          <span>Step 2: Automate publishing a Dash app in Kubernetes</span>
+        </h3>
+        <p>
+          <span>Next, I translated the YAML files into a new </span
+          ><a
+            href="https://github.com/compute-tooling/compute-studio/blob/master/workers/cs_workers/models/clients/server.py"
+            target="_blank"
+            rel="noopener"
+            ><code>Server</code></a
+          ><span> class in the </span><code>cs_workers</code
+          ><span>
+            package to be used to automatically create, delete, and check the
+            status of visualization deployments and services.</span
+          >
+        </p>
+        <pre><code class="python hljs"><span class="hljs-keyword">from</span> cs_workers.models.clients <span class="hljs-keyword">import</span> Server
+
+viz = server.Server(
+    owner=<span class="hljs-string">"hdoupe"</span>,
+    title=<span class="hljs-string">"myviz"</span>,
+    tag=<span class="hljs-string">"v1"</span>,
+    callable_name=<span class="hljs-string">"start_dash_server"</span>,
+    incluster=<span class="hljs-keyword">False</span>,
+)
+
+<span class="hljs-comment"># Create a visualization</span>
+viz.create()
+
+<span class="hljs-comment"># Check visualization status</span>
+viz.ready_stats()
+
+<span class="hljs-comment"># Delete visualization</span>
+viz.delete()
+
+</code></pre>
+        <h3 id="Step-3-Embed-the-Viz" data-id="Step-3-Embed-the-Viz">
+          <span>Step 3: Embed the Viz!</span>
+        </h3>
+        <p>
+          <span>After starting at the low-level of </span
+          ><em><span>just</span></em
+          ><span>
+            getting the visualization server running and viewing it in my
+            browser. I needed to see it embedded on a C/S webpage. Beyond just
+            being excited, this was a helpful sanity check to make sure that
+            embedding it as an IFrame was the right approach.</span
+          >
+        </p>
+
+        <p class="container">
+          <img
+            class="h-100 w-100"
+            src="https://user-images.githubusercontent.com/9206065/93091821-9f6f6500-f66c-11ea-99ab-882b2abeef72.png"
+            alt="It works!"
+            style="object-fit: cover"
+          />
+        </p>
+        <p>
+          <span
+            >Next, it was time to share some early progress. I deployed it to
+            the C/S development site and got a big message from my browser
+            saying that I had a problem, specifically an HTTPS problem. For good
+            reason, you can’t embed a link on a site with HTTPS turned on if the
+            embedded link does not support HTTPS. So, I set about learning how
+            to add TLS to a service in a Kubernetes cluster.</span
+          >
+        </p>
+        <h3 id="Step-4-Enter-Traefik" data-id="Step-4-Enter-Traefik">
+          <span>Step 4: Enter Traefik</span>
+        </h3>
+        <p>
+          <a href="https://docs.traefik.io/" target="_blank" rel="noopener"
+            ><span>Traefik</span></a
+          ><span>
+            is a routing service that can be deployed several ways including
+            with Docker and Kubernetes. Traefik routes traffic from your domain
+            to your services based on simple rules such as:</span
+          >
+        </p>
+        <pre><code>Host(`viz.compute.studio`) &amp;&amp; PathPrefix(`/hdoupe/ccc-widget/dash/`)
+</code></pre>
+        <p>
+          <span>which corresponds to this URL: </span
+          ><code>viz.compute.studio/hdoupe/ccc-widget/dash/</code><span>.</span>
+        </p>
+        <p>
+          <span
+            >Further, it’s straightforward to integrate with your DNS provider
+            and </span
+          ><a href="https://letsencrypt.org/" target="_blank" rel="noopener"
+            ><span>Let’s Encrypt</span></a
+          ><span> to make your routes secure with TLS and HTTPS.</span>
+        </p>
+        <p>
+          <span
+            >One of the cool things about open-source software is that you can
+            learn a lot just by following a project and seeing how they approach
+            problems. For example, I learned a lot about Traefik by reading
+            about how JupyterHub and Dask-Gateway use it. This was an enormous
+            help when setting Traefik up for this project.</span
+          >
+        </p>
+        <p>
+          <span
+            >I’ll spare the technical details for this section, but the
+            take-away is that the viz was live at </span
+          ><code>https://viz.compute.studio/hdoupe/ccc-widget/dash/</code
+          ><span>
+            and rendering correctly as an IFrame on the development
+            server.</span
+          >
+        </p>
+        <h3
+          id="Step-5-Bringing-it-all-together"
+          data-id="Step-5-Bringing-it-all-together"
+        >
+          <span>Step 5: Bringing it all together</span>
+        </h3>
+        <p>
+          <span
+            >Now that the cluster is more-or-less ready to start serving
+            visualizations, it’s time to bring in the brains of the operation,
+            aka the frontend of C/S. A key design decision for C/S is that the
+            compute cluster is simple but reliable. The frontend is where most
+            data is stored and where higher-level cluster automation logic
+            lives.</span
+          >
+        </p>
+        <p>
+          <span
+            >There are three data sources that are important for this
+            project:</span
+          >
+        </p>
+        <ul>
+          <li>
+            <strong><span>App data</span></strong
+            ><span
+              >: This needed to be extended to store how the app should be
+              served: as a viz or as a model that runs simulations?</span
+            >
+          </li>
+          <li>
+            <strong><span>Deployment data</span></strong
+            ><span
+              >: This stores all data on past, present, and future app
+              deployments. This is the place to go to figure out whether an app
+              has a viz deployment running, how long it has been running, and
+              whether it needs to be taken down.</span
+            >
+          </li>
+          <li>
+            <strong><span>Embed data</span></strong
+            ><span
+              >: The visualizations are going to be embedded on different sites
+              around the internet. We need to generate a secure endpoint that
+              can be used for these deployments that </span
+            ><em><span>only</span></em
+            ><span>
+              allows it to be embedded on a specific website. This is done by
+              modifying the </span
+            ><a
+              href="https:/https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors"
+              target="_blank"
+              rel="noopener"
+              ><code>frame-ancestors</code></a
+            ><span>
+              CSP to match the website where the viz will be embedded.</span
+            >
+          </li>
+        </ul>
+        <h3
+          id="Step-6-Spin-them-up-spin-them-down"
+          data-id="Step-6-Spin-them-up-spin-them-down"
+        >
+          <span>Step 6: Spin them up, spin them down</span>
+        </h3>
+        <p>
+          <span
+            >We now have the data we need to answer some key questions, and we
+            have the operations needed to act on these answers. The general
+            lifecycle of a visualization is as follows:</span
+          >
+        </p>
+        <ol>
+          <li>
+            <p>
+              <strong
+                ><span>A user goes to the visualization page.</span></strong
+              >
+            </p>
+            <p>
+              <em><span>Is there a deployment running?</span></em
+              ><span>
+                If not, let’s start one up. A new deployment object is created
+                in the front-end’s database, and a new visualization deployment
+                is created in the compute cluster. While the deployment is
+                spinning up, a JavaScript function is pinging a REST API
+                endpoint checking the status of the deployment. Once it is
+                ready, the snippet embeds the Iframe in the HTML page. The user
+                can now interact with it.</span
+              >
+            </p>
+            <p>
+              <span
+                >Another Javascript function is triggered that ping’s the REST
+                API endpoint letting it know the deployment is still in use. The
+                snippet only “phones home” while </span
+              ><a
+                href="https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus"
+                target="_blank"
+                rel="noopener"
+                ><code>document.hasFocus()</code></a
+              ><span>
+                is True. If the user navigates to another tab, opens another
+                window, or their computer falls asleep, the document loses focus
+                and the page no longer phones home.</span
+              >
+            </p>
+          </li>
+          <li>
+            <p>
+              <strong
+                ><span
+                  >Another user comes to the visualization page.</span
+                ></strong
+              >
+            </p>
+            <p>
+              <em><span>Is there a deployment running?</span></em
+              ><span>
+                Yes! The timestamp of the deployment’s most recent full page
+                load is updated, and the visualization page continues to phone
+                home as long as the user’s webpage has focus.</span
+              >
+            </p>
+          </li>
+          <li>
+            <p>
+              <strong
+                ><span
+                  >It’s been some time since we’ve heard from the viz.</span
+                ></strong
+              >
+            </p>
+            <p>
+              <em><span>Is anyone still using this deployment?</span></em
+              ><span>
+                Every 15 minutes a process runs that asks this for every live
+                deployment. If there hasn’t been a full page load or ping in
+                over 30 minutes, the deployment is spun down. The frontend does
+                this by doing a </span
+              ><code>DELETE</code
+              ><span>
+                request to a REST API endpoint on the compute cluster.</span
+              >
+            </p>
+          </li>
+        </ol>
+        <p>
+          <span
+            >These rules will need some tweaking. Bots caused problems early on
+            because their constant pinging of the viz page meant that the
+            deployment was never spun down. This was corrected to some extent by
+            adding the viz pages to the </span
+          ><code>robots.txt</code
+          ><span>
+            file. However, there are more measures that can be taken in the
+            future to mitigate this.</span
+          >
+        </p>
+        <p>
+          <span
+            >The check for deleting deployments could also be tweaked by setting
+            a different stale-after time limit for the most recent </span
+          ><em><span>load</span></em
+          ><span> time and most recent </span><em><span>ping</span></em
+          ><span> time.</span>
+        </p>
+        <h3 id="Step-7-Security-measures" data-id="Step-7-Security-measures">
+          <span>Step 7: Security measures</span>
+        </h3>
+        <p>
+          <span
+            >Now that some of the Kubernetes resources are controlled by a REST
+            API endpoint, I needed to make sure that not just anyone can
+            manipulate the compute cluster. After some research, it seemed like
+            there are two approaches that could be used to authenticate requests
+            to the compute cluster. One is </span
+          ><a href="https://oauth.net/2/" target="_blank" rel="noopener"
+            ><span>OAuth 2.0</span></a
+          ><span>, and the other is to use </span
+          ><a
+            href="https://tools.ietf.org/html/rfc7519"
+            target="_blank"
+            rel="noopener"
+            ><span>JSON Web Tokens (JWT)</span></a
+          ><span>. I noticed that </span
+          ><a
+            href="https://github.com/jupyterhub/jupyterhub/issues/3155"
+            target="_blank"
+            rel="noopener"
+            ><span>JupyterHub uses OAuth</span></a
+          ><span
+            >, but for our situation, adding OAuth seemed like it would add a
+            great deal of complexity to the architecture of C/S since it
+            required an external authentication service. In the end, the
+            simplest way forward was to use a JWT approach where the frontend
+            and compute cluster use a securely stored secret to encode and
+            decode JWT’s. Then, when the cluster receives requests, it ensures
+            that it can decode the JWT token in the request header with the
+            shared JWT secret.</span
+          >
+        </p>
+        <h3
+          id="Step-8-Put-it-in-production"
+          data-id="Step-8-Put-it-in-production"
+        >
+          <span>Step 8: Put it in production</span>
+        </h3>
+        <p>
+          <span
+            >Time to deploy! The capability to host Bokeh and Dash/Plotly apps
+            has been live for about 10 days now. Deployments are being spun up
+            and down quite smoothly. This isn’t to say that there haven’t been
+            any bugs. However, the primary components of serving apps to users
+            and spinning them up and down quickly have worked as expected.</span
+          >
+        </p>
+        <p>
+          <span
+            >Here are the numbers for the first Dash app published on Compute
+            Studio: It’s been live for 10 days, has been deployed 54 times and
+            has been running for about 25% of the time during this period. On
+            average, each deployment is live for about an hour.</span
+          >
+        </p>
+        <h2 id="Wrapping-up" data-id="Wrapping-up"><span>Wrapping up</span></h2>
+        <p>
+          <span
+            >Over the past few months, I have spent a most of my time improving
+            Compute Studio’s infrastructure to be more scalable, more
+            maintainable, and cheaper. Each of these projects has pushed me to
+            learn a different part of the Kubernetes API. By the end of each
+            project, I feel like I have gained at least twice as much Kubernetes
+            and general infrastructure knowledge as I had at the beginning. It’s
+            been an immensely rewarding (and at times frustrating)
+            experience.</span
+          >
+        </p>
+        <p>
+          <span
+            >This project had two major pain points and I hope that others learn
+            from them:</span
+          >
+        </p>
+        <ol>
+          <li>
+            <span>Before trying Traefik, I tried to use </span
+            ><a
+              href="https://cert-manager.io/docs/"
+              target="_blank"
+              rel="noopener"
+              ><span>cert-manager</span></a
+            ><span>
+              and could not get it to work. I spent two days on it, debugging
+              countless errors and bugging my friend who does this stuff
+              full-time. Finally, I swapped over to Traefik, and within a couple
+              hours, I had it working. Further, the routing support wound up
+              being extremely useful for routing requests to the right viz
+              deployment.</span
+            >
+          </li>
+          <li>
+            <span
+              >The Kubernetes Python client is great if you know what you are
+              looking for. I needed to manage Traefik’s </span
+            ><a
+              href="https://docs.traefik.io/providers/kubernetes-crd/"
+              target="_blank"
+              rel="noopener"
+              ><code>IngressRoute</code></a
+            ><span> object which is a </span
+            ><a
+              href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/"
+              target="_blank"
+              rel="noopener"
+              ><span>Custom Resource Definition</span></a
+            ><span>. You are looking for the </span
+            ><a
+              href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CustomObjectsApi.md"
+              target="_blank"
+              rel="noopener"
+              ><code>CustomObjectsApi</code></a
+            ><span
+              >, and here’s an example for how to use it with Traefik’s </span
+            ><code>IngressRoute</code><span>: </span
+            ><a
+              href="https://github.com/compute-tooling/compute-studio/blob/1.7.0/workers/cs_workers/ingressroute.py"
+              target="_blank"
+              rel="noopener"
+              ><code>ingressroute.py</code></a
+            ><span>.</span>
+          </li>
+        </ol>
+        <p>
+          <span
+            >Thanks for reading! As always, I’d love to hear your feedback
+            either about the visualizations or the engineering behind them.
+            Please feel welcome to email me at hank at compute.studio, join our </span
+          ><a
+            href="https://app.element.io/#/room/#compute-studio:matrix.org"
+            target="_blank"
+            rel="noopener"
+            ><span>community chat</span></a
+          ><span>, or open an issue at the </span
+          ><a
+            href="https://github.com/compute-tooling/compute-studio/issues"
+            target="_blank"
+            rel="noopener"
+            ><span>compute-studio repo</span></a
+          ><span>.</span>
+        </p>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
