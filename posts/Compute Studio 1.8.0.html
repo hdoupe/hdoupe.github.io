@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta property="og:title" content="C/S 1.8">
+    <meta property="og:type" content="website">
+    <meta name="description" content="Release notes for Compute Studio 1.8" />
+    <meta name="og:description" content="Release notes for Compute Studio 1.8" />
+    <meta property="og:type" content="article">
+    <title>hankdoupe</title>
+
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <style>
+      .bg-dodger {
+        background-color: dodgerblue;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        font-size: 17px;
+      }
+
+      a {
+        color: dodgerblue;
+      }
+
+      /* code{white-space: pre-wrap;} */
+      span.smallcaps {
+        font-variant: small-caps;
+      }
+
+      span.underline {
+        text-decoration: underline;
+      }
+
+      div.column {
+        display: inline-block;
+        vertical-align: top;
+        width: 50%;
+      }
+
+      code {
+        color: inherit;
+        background-color: rgba(27, 31, 35, 0.05);
+        border-radius: 5px;
+        padding: 0.2rem;
+      }
+
+      pre code {
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      h3 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dodger static-top">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">hankdoupe</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="../index.html"
+                >Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-2" style="max-width: 1000px">
+      <h1
+        class="mt-5"
+        id="compute-studio-1.8.0"
+        data-id="Hosting-DashPlotly-and-Bokeh-Apps-on-Compute-Studio"
+      >
+        <span>Compute Studio 1.8.0</span>
+      </h1>
+      <hr class="my-4" />
+      <p><strong>Highlights</strong></p>
+      <ul>
+        <li>Simplified and streamlined app publishing process.</li>
+        <li>Private apps that are only available to you and your team.</li>
+        <li>Simulations are public by default.</li>
+        <li>
+          Infrastructure updates producing a snappier site, silky-smooth
+          releases, and support for running your own C/S compute cluster.
+        </li>
+        <li>
+          Revamped C/S Pro subscription for unlimited private simulations and
+          private apps at $9/month.
+        </li>
+      </ul>
+      <p>
+        Compute Studio 1.8.0 brings something for everyone in the community. For
+        all of our existing users, you have been upgraded to C/S Pro for a free
+        three month trial. You have the option to
+        <a href="https://compute.studio/billing/upgrade/monthly/aftertrial/"
+          >opt-in to continuing the subscription</a
+        >
+        anytime. Users who are interested in viewing public content on Compute
+        Studio will be pleased to hear that simulations are now public by
+        default. We have big plans for a C/S public activity log, but the
+        bare-bones version of it is available at
+        <a href="https://compute.studio/log/">compute.studio/log/</a>. App
+        developers can now publish private apps. This allows app developers to
+        not only create apps with sensitive data sources but also have sensitive
+        data in their outputs. The app publishing flow has also been streamlined
+        significantly, making it much easier to publish new apps. Bokeh and Dash
+        apps are now easy to publish on C/S, with new straightforward docs,
+        available from the
+        <a href="https://docs.compute.studio/publish/data-viz/guide.html"
+          >C/S publish page</a
+        >.
+      </p>
+      <p>
+        Of course, I snuck in some infrastructure features to make my life as a
+        C/S developer better (and in turn build a better website for you).
+        Updates to the site are now deployed automatically. This makes it easy
+        to release new features and bug fixes. C/S has out-grown Heroku and is
+        now hosted with Kubernetes, a deployment platform, on Google Cloud.
+        Finally, I made significant progress on my pet project of letting anyone
+        who’s interested run their own compute clusters. This is a cool feature
+        if you have sensitive data that you <em>must</em> keep on your own
+        servers. Or, if you are like me, you just have a raspberry pi laying
+        around that you want to put to good use.
+      </p>
+      <p>
+        If you enjoy using Compute Studio and you want to contribute to its
+        development, please check out our
+        <a href="https://compute.studio/billing/upgrade/monthly/"
+          >C/S Pro subscription</a
+        >. It’s $9/month and goes towards paying for servers and my rent.
+      </p>
+      <p>
+        Thanks for checking out the release notes and please let me know what
+        you think!
+      </p>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
